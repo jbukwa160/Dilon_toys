@@ -35,10 +35,10 @@ export default async function DashboardPage() {
       {unreadChats > 0 ? (
         <div className="mb-6 flex flex-wrap items-center gap-3 rounded-3xl border-2 border-brand bg-brand-soft p-5">
           <MessagesSquare className="h-6 w-6 shrink-0 text-brand" />
-          <p className="flex-1 font-bold">
+          <p className="min-w-[13rem] flex-1 font-bold">
             {unreadChats === 1 ? "1 разговор в чата чака отговор." : `${unreadChats} разговора в чата чакат отговор.`}
           </p>
-          <Link href="/admin/chat" className="btn btn-primary h-11 px-5 !shadow-none">
+          <Link href="/admin/chat" className="btn btn-primary h-11 px-5 !shadow-none max-sm:w-full">
             Към чата
           </Link>
         </div>
@@ -47,10 +47,10 @@ export default async function DashboardPage() {
       {stats.demo > 0 ? (
         <div className="mb-6 flex flex-wrap items-center gap-3 rounded-3xl border-2 border-sun bg-sun-soft p-5">
           <TriangleAlert className="h-6 w-6 shrink-0" />
-          <p className="flex-1 font-bold">
+          <p className="min-w-[13rem] flex-1 font-bold">
             {formatNumber(stats.demo)} продукта все още са с примерни (демо) цени. Качете реалните цени от „Цени и промоции“ → „Качи файл“.
           </p>
-          <Link href="/admin/tseni" className="btn btn-primary h-11 px-5 !shadow-none">
+          <Link href="/admin/tseni" className="btn btn-primary h-11 px-5 !shadow-none max-sm:w-full">
             Към цените
           </Link>
         </div>

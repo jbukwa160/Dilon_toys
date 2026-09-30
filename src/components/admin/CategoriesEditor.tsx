@@ -83,13 +83,16 @@ export function CategoriesEditor({ initial, counts, autoImages }: Props) {
                 const n = count(c.slug);
                 return (
                   <li key={c.slug} className={clsx("rounded-2xl border-2", isOpen ? "border-ink" : "border-line", c.hidden && !isOpen && "bg-canvas")}>
-                    <div className="flex flex-wrap items-center gap-3 p-3">
-                      <button type="button" onClick={() => setOpen(isOpen ? null : c.slug)} className="flex min-w-0 flex-1 items-center gap-3 text-left" aria-expanded={isOpen}>
-                        <span className={clsx("grid h-11 w-11 shrink-0 place-items-center rounded-xl", c.hidden && "opacity-50")} style={{ background: c.color, color: c.accent }}>
+                    <div className="flex items-start gap-3 p-3">
+                      <button type="button" onClick={() => setOpen(isOpen ? null : c.slug)} className="flex min-w-0 flex-1 items-start gap-3 text-left" aria-expanded={isOpen}>
+                        <Thumb src={c.image || autoImages[c.slug] || ""} dim={c.hidden}>
                           <CategoryIcon icon={c.icon} slug={c.slug} className="h-5 w-5" />
-                        </span>
-                        <span className="min-w-0 flex-1">
-                          <span className={clsx("block truncate font-black", c.hidden && "text-muted")}>{c.name || "Без име"}</span>
+                        </Thumb>
+                        <span className="min-w-0 flex-1 pt-0.5">
+                          <span className={clsx("flex items-start gap-1 font-black leading-snug", c.hidden && "text-muted")}>
+                            <span className="min-w-0 break-words">{c.name || "Без име"}</span>
+                            <ChevronDown className={clsx("mt-0.5 h-4 w-4 shrink-0 text-muted transition", isOpen && "rotate-180")} />
+                          </span>
                           <span className="flex flex-wrap items-center gap-1.5 text-xs font-bold text-muted">
                             <span>{n.toLocaleString("bg-BG")} продукта</span>
                             {c.subs.length ? <span>· {c.subs.length} подкатегории</span> : null}
@@ -98,25 +101,26 @@ export function CategoriesEditor({ initial, counts, autoImages }: Props) {
                             {!n && !c.hidden ? <span className="rounded-full bg-sun-soft px-2 py-0.5 text-ink">Празна — не се вижда в сайта</span> : null}
                           </span>
                         </span>
-                        <ChevronDown className={clsx("h-5 w-5 shrink-0 text-muted transition", isOpen && "rotate-180")} />
                       </button>
-                      <div className="flex gap-1.5">
+                      <div className="flex shrink-0 flex-col items-end gap-1 sm:flex-row sm:items-center">
                         <button
                           type="button"
                           onClick={() => update(c.slug, { hidden: !c.hidden })}
-                          className={clsx("grid h-9 w-9 place-items-center rounded-lg border", c.hidden ? "border-ink bg-ink text-white" : "border-line hover:border-ink")}
+                          className={clsx("grid h-8 w-8 place-items-center rounded-lg border", c.hidden ? "border-ink bg-ink text-white" : "border-line hover:border-ink")}
                           aria-label={c.hidden ? `Покажи „${c.name}“ в менюто` : `Скрий „${c.name}“ от менюто`}
                           aria-pressed={c.hidden}
                           title={c.hidden ? "Скрита — натиснете, за да се показва" : "Показва се — натиснете, за да я скриете"}
                         >
-                          {c.hidden ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                          {c.hidden ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
                         </button>
-                        <button type="button" disabled={i === 0} onClick={() => setCats((l) => move(l, i, -1))} className="grid h-9 w-9 place-items-center rounded-lg border border-line hover:border-ink disabled:opacity-30" aria-label={`„${c.name}“ по-нагоре`}>
-                          <ArrowUp className="h-4 w-4" />
-                        </button>
-                        <button type="button" disabled={i === cats.length - 1} onClick={() => setCats((l) => move(l, i, 1))} className="grid h-9 w-9 place-items-center rounded-lg border border-line hover:border-ink disabled:opacity-30" aria-label={`„${c.name}“ по-надолу`}>
-                          <ArrowDown className="h-4 w-4" />
-                        </button>
+                        <div className="flex gap-1">
+                          <button type="button" disabled={i === 0} onClick={() => setCats((l) => move(l, i, -1))} className="grid h-8 w-8 place-items-center rounded-lg border border-line hover:border-ink disabled:opacity-30" aria-label={`„${c.name}“ по-нагоре`}>
+                            <ArrowUp className="h-3.5 w-3.5" />
+                          </button>
+                          <button type="button" disabled={i === cats.length - 1} onClick={() => setCats((l) => move(l, i, 1))} className="grid h-8 w-8 place-items-center rounded-lg border border-line hover:border-ink disabled:opacity-30" aria-label={`„${c.name}“ по-надолу`}>
+                            <ArrowDown className="h-3.5 w-3.5" />
+                          </button>
+                        </div>
                       </div>
                     </div>
                     {isOpen ? (
@@ -195,6 +199,20 @@ export function CategoriesEditor({ initial, counts, autoImages }: Props) {
 
       <SaveBar dirty={ed.dirty} pending={ed.pending} status={ed.status} onSave={ed.submit} onReset={ed.reset} />
     </>
+  );
+}
+
+/** The row's picture: the category's (or most popular product's) image, or its icon when there is none. */
+function Thumb({ src, dim, children }: { src: string; dim?: boolean; children: React.ReactNode }) {
+  return (
+    <span className={clsx("grid h-12 w-12 shrink-0 place-items-center overflow-hidden rounded-xl border border-line bg-white p-1", dim && "opacity-50")}>
+      {src ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img src={src} alt="" loading="lazy" referrerPolicy="no-referrer" className="h-full w-full object-contain" />
+      ) : (
+        children
+      )}
+    </span>
   );
 }
 

@@ -41,8 +41,8 @@ yarn-error.log*
 next-env.d.ts
 
 # catalog + orders databases (rebuild with npm run import)
-/data/*.db
-/data/*.db-*
-/data/*.tmp*
-/data/import-report.txt
-/data/uploads/
+# /data/*.db
+# /data/*.db-*
+# /data/*.tmp*
+# /data/import-report.txt
+# /data/uploads/

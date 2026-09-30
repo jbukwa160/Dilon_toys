@@ -13,8 +13,8 @@ export function PointsBadge({ amount, className, size = "sm" }: { amount: number
   return (
     <span
       className={clsx(
-        "inline-flex items-center gap-1 rounded-full bg-grape-soft font-extrabold text-grape",
-        size === "sm" ? "px-2 py-0.5 text-xs" : "px-3 py-1 text-sm",
+        "inline-flex items-center gap-1 whitespace-nowrap rounded-full bg-grape-soft font-extrabold text-grape",
+        size === "sm" ? "px-2 py-0.5 text-[0.7rem] sm:text-xs" : "px-3 py-1 text-sm",
         className,
       )}
       title="Бонус точки, които ще получите с тази покупка"

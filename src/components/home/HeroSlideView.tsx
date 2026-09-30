@@ -69,25 +69,25 @@ export function HeroSlideView({
           <div className="pointer-events-none absolute -bottom-20 right-1/3 h-64 w-64 rounded-full bg-grape/15 blur-3xl" />
         </>
       ) : null}
-      <div className="relative grid items-center gap-10 lg:grid-cols-[1.05fr_1fr]">
+      <div className="relative grid items-center gap-8 md:grid-cols-[1.1fr_1fr] lg:grid-cols-[1.05fr_1fr] lg:gap-10">
         <div>
           {slide.eyebrow ? (
             <span className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-1.5 text-sm font-extrabold text-brand shadow-sm">
               <Sparkles className="h-4 w-4" /> {slide.eyebrow}
             </span>
           ) : null}
-          <H className="mt-5 text-4xl font-black leading-[1.05] tracking-tight sm:text-5xl lg:text-[3.6rem]">
+          <H className="mt-5 text-4xl font-black leading-[1.05] tracking-tight sm:text-5xl md:text-[2.6rem] lg:text-[3.6rem]">
             {slide.title}
             {slide.highlight ? <> <span className={theme.dark ? "text-sun" : "text-brand"}>{slide.highlight}</span></> : null}
           </H>
           {slide.text ? <p className={clsx("mt-5 max-w-xl text-lg font-semibold", theme.dark ? "text-white/85" : "text-ink-soft")}>{slide.text}</p> : null}
           {(slide.primary.label && slide.primary.href) || (slide.secondary.label && slide.secondary.href) ? (
-            <div className="mt-8 flex flex-wrap gap-3">
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
               {slide.primary.label && slide.primary.href ? (
                 <SmartLink
                   href={slide.primary.href}
                   tabIndex={tab}
-                  className={clsx("btn h-14 px-8 text-lg", theme.dark ? "bg-white text-ink shadow-[0_4px_0_rgb(0_0_0/0.15)] hover:bg-sun-soft" : "btn-primary")}
+                  className={clsx("btn h-14 w-full px-8 text-lg sm:w-auto", theme.dark ? "bg-white text-ink shadow-[0_4px_0_rgb(0_0_0/0.15)] hover:bg-sun-soft" : "btn-primary")}
                 >
                   {slide.primary.label} <ArrowRight className="h-5 w-5" />
                 </SmartLink>
@@ -96,7 +96,7 @@ export function HeroSlideView({
                 <SmartLink
                   href={slide.secondary.href}
                   tabIndex={tab}
-                  className={clsx("btn h-14 px-7 text-lg", theme.dark ? "border-2 border-white/50 text-white hover:bg-white/10" : "btn-ghost")}
+                  className={clsx("btn h-14 w-full px-7 text-lg sm:w-auto", theme.dark ? "border-2 border-white/50 text-white hover:bg-white/10" : "btn-ghost")}
                 >
                   {slide.secondary.label}
                 </SmartLink>
@@ -111,7 +111,7 @@ export function HeroSlideView({
             <img src={slide.image} alt="" loading={eager ? "eager" : "lazy"} className="max-h-[440px] w-full rounded-3xl object-contain" />
           </div>
         ) : collage.length ? (
-          <div className="relative mx-auto grid w-full max-w-[520px] grid-cols-2 gap-4">
+          <div className="relative mx-auto grid w-full max-w-[520px] grid-cols-2 gap-3 md:gap-4">
             {collage.slice(0, 4).map((p, i) => (
               <Link
                 key={p.id}

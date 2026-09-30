@@ -261,9 +261,12 @@ export function SaveBar({
   extra?: React.ReactNode;
 }) {
   return (
-    <div className="sticky bottom-0 z-20 -mx-4 mt-6 border-t border-line bg-white/95 px-4 py-3 backdrop-blur md:-mx-8 md:px-8">
-      <div className="flex flex-wrap items-center gap-3">
-        <button type="button" onClick={onSave} disabled={pending || !dirty} className="btn btn-primary h-12 px-7">
+    <div
+      className="sticky bottom-0 z-20 -mx-4 mt-6 border-t border-line bg-white/95 px-4 pt-3 backdrop-blur md:-mx-8 md:px-8"
+      style={{ paddingBottom: "max(0.75rem, env(safe-area-inset-bottom))" }}
+    >
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+        <button type="button" onClick={onSave} disabled={pending || !dirty} className="btn btn-primary h-12 px-7 max-sm:flex-1">
           {pending ? <LoaderCircle className="h-5 w-5 animate-spin" /> : <Save className="h-5 w-5" />}
           {pending ? "Запазване…" : saveLabel}
         </button>
@@ -272,7 +275,7 @@ export function SaveBar({
             Отказ
           </button>
         ) : null}
-        <span className="text-sm font-bold" aria-live="polite">
+        <span className="text-sm font-bold max-sm:order-last max-sm:w-full max-sm:empty:hidden" aria-live="polite">
           {status.kind === "error" ? (
             <span className="flex items-center gap-1.5 text-brand">
               <CircleAlert className="h-4 w-4" /> {status.message}
@@ -285,7 +288,7 @@ export function SaveBar({
             <span className="text-muted">Имате незапазени промени</span>
           ) : null}
         </span>
-        <span className="ml-auto">{extra}</span>
+        {extra ? <span className="ml-auto max-sm:hidden">{extra}</span> : null}
       </div>
     </div>
   );

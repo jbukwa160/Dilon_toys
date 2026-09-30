@@ -22,11 +22,11 @@ export function HeaderActions() {
       <button
         type="button"
         onClick={openDrawer}
-        className="relative flex h-12 items-center gap-2 rounded-full bg-ink pl-3.5 pr-4 text-white transition hover:bg-ink-soft"
+        className="relative flex h-12 min-w-12 shrink-0 items-center justify-center gap-2 rounded-full bg-ink px-3.5 text-white transition hover:bg-ink-soft lg:pr-4"
         aria-label={`Количка (${count} продукта)`}
       >
         <ShoppingCart className="h-5 w-5" strokeWidth={2.4} />
-        <span className="hidden text-sm font-extrabold sm:inline">{count ? formatPrice(subtotal) : "Количка"}</span>
+        <span className="hidden text-sm font-extrabold lg:inline">{count ? formatPrice(subtotal) : "Количка"}</span>
         {count ? (
           <span className="absolute -right-1 -top-1 grid h-5 min-w-5 place-items-center rounded-full bg-sun px-1 text-[0.7rem] font-black text-ink">
             {count}

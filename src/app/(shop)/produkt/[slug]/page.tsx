@@ -96,7 +96,7 @@ export default async function ProductPage({ params }: Props) {
     <>
       <div className="container-shop">
         <Breadcrumbs items={crumbs} />
-        <div className="grid gap-8 lg:grid-cols-[1.05fr_1fr] lg:gap-12">
+        <div className="grid gap-8 md:grid-cols-2 md:gap-8 lg:grid-cols-[1.05fr_1fr] lg:gap-12">
           <Gallery
             images={p.images}
             alt={p.name}
@@ -222,7 +222,7 @@ export default async function ProductPage({ params }: Props) {
           </section>
         ) : null}
 
-        <section className="mt-12 grid gap-8 lg:grid-cols-[1.05fr_1fr] lg:gap-12">
+        <section className="mt-12 grid gap-8 md:grid-cols-2 lg:grid-cols-[1.05fr_1fr] lg:gap-12">
           <div className="rounded-3xl border border-line bg-white p-6 md:p-8">
             <h2 className="text-xl font-black">Характеристики</h2>
             <dl className="mt-4 divide-y divide-line">

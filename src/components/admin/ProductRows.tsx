@@ -60,38 +60,37 @@ function Row({
       else setStatus({ kind: "error", message: r.error });
     });
 
-  const input = "w-full rounded-lg border-2 border-line bg-white px-2 py-1.5 text-right font-bold outline-none focus:border-sky";
+  const input = "w-full rounded-lg border-2 border-line bg-white px-2 py-2 text-right font-bold outline-none focus:border-sky xl:py-1.5";
+  const label = "mb-1 block text-[0.7rem] font-extrabold uppercase tracking-wide text-muted xl:sr-only";
 
   return (
-    <tr className={clsx("align-top", hidden && "bg-canvas/70", selected && "!bg-sky-soft/60")}>
-      <td className="py-3 pl-4 pr-1">
-        <input
-          type="checkbox"
-          checked={selected}
-          onChange={(e) => onSelect(p.id, e.target.checked)}
-          className="mt-5 h-5 w-5 cursor-pointer accent-[var(--color-sky)]"
-          aria-label={`Избери ${p.name}`}
+    // Phones / tablets: a card. Wide screens (xl): one table row — the wrappers with xl:contents disappear
+    // and their children become the columns of the grid.
+    <li className={clsx("grid grid-cols-[auto_3.5rem_minmax(0,1fr)] items-start gap-3 p-4 xl:py-3", GRID, hidden && "bg-canvas/70", selected && "!bg-sky-soft/60")}>
+      <input
+        type="checkbox"
+        checked={selected}
+        onChange={(e) => onSelect(p.id, e.target.checked)}
+        className="mt-4 h-5 w-5 cursor-pointer accent-[var(--color-sky)]"
+        aria-label={`Избери ${p.name}`}
+      />
+      <span className="block h-14 w-14 overflow-hidden rounded-xl border border-line bg-white p-1">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={p.image ?? "/placeholder.svg"}
+          alt=""
+          loading="lazy"
+          referrerPolicy="no-referrer"
+          className={clsx("h-full w-full object-contain", hidden && "opacity-40")}
         />
-      </td>
-      <td className="py-3 pr-2">
-        <span className="block h-14 w-14 overflow-hidden rounded-xl border border-line bg-white p-1">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={p.image ?? "/placeholder.svg"}
-            alt=""
-            loading="lazy"
-            referrerPolicy="no-referrer"
-            className={clsx("h-full w-full object-contain", hidden && "opacity-40")}
-          />
-        </span>
-      </td>
-      <td className="min-w-64 py-3 pr-3">
+      </span>
+      <div className="min-w-0">
         <Link href={`/admin/produkti/${p.id}`} className="line-clamp-2 font-bold leading-snug hover:text-brand">
           {p.name}
         </Link>
         <div className="mt-1 flex flex-wrap gap-x-2 gap-y-1 text-xs text-muted">
           <span>{p.sku}</span>
-          {p.ean ? <span>· баркод {p.ean}</span> : null}
+          {p.ean ? <span className="max-sm:hidden">· баркод {p.ean}</span> : null}
           {p.brand ? <span>· {p.brand}</span> : null}
           <span>· {p.categoryLabel}</span>
           {p.ageMin != null ? <span className="font-bold text-sky">· {ageBadge(p.ageMin)}</span> : null}
@@ -103,46 +102,54 @@ function Row({
           {p.adminEdited && !p.custom ? <span className="rounded-full bg-grape-soft px-2 py-0.5 text-[0.7rem] font-bold text-grape">Редактиран</span> : null}
           {p.demoPrice ? <span className="rounded-full bg-sun-soft px-2 py-0.5 text-[0.7rem] font-bold">Демо цена</span> : null}
         </div>
-      </td>
-      <td className="w-28 py-3 pr-2">
-        <input className={input} value={form.price} onChange={(e) => set("price", e.target.value)} inputMode="decimal" aria-label={`Цена на ${p.name}`} />
-      </td>
-      <td className="w-28 py-3 pr-2">
-        <input
-          className={input}
-          value={form.oldPrice}
-          onChange={(e) => set("oldPrice", e.target.value)}
-          inputMode="decimal"
-          placeholder="—"
-          aria-label={`Стара цена на ${p.name}`}
-        />
-      </td>
-      <td className="w-24 py-3 pr-2">
-        <input className={input} value={form.stock} onChange={(e) => set("stock", e.target.value)} inputMode="numeric" aria-label={`Наличност на ${p.name}`} />
-      </td>
-      <td className="w-24 py-3 pr-2 text-center">
-        <button
-          type="button"
-          role="switch"
-          aria-checked={!hidden}
-          onClick={toggleHidden}
-          disabled={pending}
-          title={hidden ? "Скрит — натиснете, за да се показва в сайта" : "Показва се — натиснете, за да го скриете"}
-          className={clsx("relative mt-1.5 h-7 w-12 rounded-full transition", !hidden ? "bg-mint" : "bg-line")}
-        >
-          <span className={clsx("absolute top-1 h-5 w-5 rounded-full bg-white shadow transition-all", !hidden ? "left-6" : "left-1")} />
-          <span className="sr-only">Показване в сайта</span>
-        </button>
-      </td>
-      <td className="w-44 py-3 pr-4">
+      </div>
+
+      <div className="col-span-3 grid grid-cols-3 gap-2 sm:col-span-1 sm:col-start-3 sm:max-w-md xl:contents">
+        <label className="block">
+          <span className={label}>Цена €</span>
+          <input className={input} value={form.price} onChange={(e) => set("price", e.target.value)} inputMode="decimal" aria-label={`Цена на ${p.name}`} />
+        </label>
+        <label className="block">
+          <span className={label}>Стара цена €</span>
+          <input
+            className={input}
+            value={form.oldPrice}
+            onChange={(e) => set("oldPrice", e.target.value)}
+            inputMode="decimal"
+            placeholder="—"
+            aria-label={`Стара цена на ${p.name}`}
+          />
+        </label>
+        <label className="block">
+          <span className={label}>Наличност</span>
+          <input className={input} value={form.stock} onChange={(e) => set("stock", e.target.value)} inputMode="numeric" aria-label={`Наличност на ${p.name}`} />
+        </label>
+      </div>
+
+      <div className="col-span-3 flex flex-wrap items-center justify-between gap-3 sm:col-span-1 sm:col-start-3 xl:contents">
+        <div className="flex items-center gap-2 xl:justify-center">
+          <button
+            type="button"
+            role="switch"
+            aria-checked={!hidden}
+            onClick={toggleHidden}
+            disabled={pending}
+            title={hidden ? "Скрит — натиснете, за да се показва в сайта" : "Показва се — натиснете, за да го скриете"}
+            className={clsx("relative h-7 w-12 shrink-0 rounded-full transition xl:mt-1.5", !hidden ? "bg-mint" : "bg-line")}
+          >
+            <span className={clsx("absolute top-1 h-5 w-5 rounded-full bg-white shadow transition-all", !hidden ? "left-6" : "left-1")} />
+            <span className="sr-only">Показване в сайта</span>
+          </button>
+          <span className="text-sm font-bold text-ink-soft xl:hidden">{hidden ? "Скрит" : "В сайта"}</span>
+        </div>
         <div className="flex flex-col items-end gap-1.5">
           {dirty ? (
-            <button type="button" onClick={save} disabled={pending} className="btn btn-primary h-9 w-full px-3 text-sm !shadow-none">
+            <button type="button" onClick={save} disabled={pending} className="btn btn-primary h-10 w-full px-4 text-sm !shadow-none xl:h-9 xl:px-3">
               {pending ? <LoaderCircle className="h-4 w-4 animate-spin" /> : <Check className="h-4 w-4" strokeWidth={3} />} Запази
             </button>
           ) : (
             <div className="flex gap-1.5">
-              <Link href={`/admin/produkti/${p.id}`} className="btn btn-ghost h-9 px-3 text-sm">
+              <Link href={`/admin/produkti/${p.id}`} className="btn btn-ghost h-10 px-4 text-sm xl:h-9 xl:px-3">
                 <Pencil className="h-4 w-4" /> Редактирай
               </Link>
               {!hidden ? (
@@ -150,7 +157,7 @@ function Row({
                   href={`/produkt/${p.slug}`}
                   target="_blank"
                   rel="noopener"
-                  className="btn btn-ghost h-9 w-9 !px-0"
+                  className="btn btn-ghost h-10 w-10 !px-0 xl:h-9 xl:w-9"
                   title="Виж в сайта"
                   aria-label="Виж в сайта"
                 >
@@ -170,10 +177,13 @@ function Row({
             </span>
           ) : null}
         </div>
-      </td>
-    </tr>
+      </div>
+    </li>
   );
 }
+
+/** The columns of a row on wide screens (header and rows share them). */
+const GRID = "xl:grid-cols-[1.5rem_3.5rem_minmax(0,1fr)_6.5rem_6.5rem_5.5rem_4.5rem_10.5rem] xl:gap-x-3";
 
 export function ProductRows({
   items,
@@ -221,39 +231,34 @@ export function ProductRows({
           </button>
         </p>
       ) : null}
-      <div className="overflow-x-auto rounded-3xl border border-line bg-white">
-        <table className="w-full min-w-[860px] text-left text-[0.95rem]">
-          <thead className="border-b border-line bg-canvas text-xs font-extrabold uppercase tracking-wide text-muted">
-            <tr>
-              <th className="py-3 pl-4 pr-1">
-                <input
-                  type="checkbox"
-                  checked={allOnPage}
-                  onChange={(e) => {
-                    setAllFound(false);
-                    setSelected(e.target.checked ? new Set(items.map((p) => p.id)) : new Set());
-                  }}
-                  className="h-5 w-5 cursor-pointer accent-[var(--color-sky)]"
-                  aria-label="Избери всички на тази страница"
-                />
-              </th>
-              <th className="py-3 pr-2" />
-              <th className="py-3">Продукт</th>
-              <th className="py-3 pr-2 text-right">Цена €</th>
-              <th className="py-3 pr-2 text-right" title="Цена преди намаление. Празно = без промоция.">
-                Стара цена €
-              </th>
-              <th className="py-3 pr-2 text-right">Наличност</th>
-              <th className="py-3 pr-2 text-center">В сайта</th>
-              <th className="py-3 pr-4" />
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-line">
-            {items.map((p) => (
-              <Row key={p.id} p={p} onDirty={onDirty} selected={selected.has(p.id)} onSelect={onSelect} />
-            ))}
-          </tbody>
-        </table>
+      <div className="overflow-hidden rounded-3xl border border-line bg-white text-[0.95rem]">
+        <div className={clsx("grid grid-cols-[auto_1fr] items-center gap-3 border-b border-line bg-canvas px-4 py-3 text-xs font-extrabold uppercase tracking-wide text-muted", GRID)}>
+          <input
+            type="checkbox"
+            checked={allOnPage}
+            onChange={(e) => {
+              setAllFound(false);
+              setSelected(e.target.checked ? new Set(items.map((p) => p.id)) : new Set());
+            }}
+            className="h-5 w-5 cursor-pointer accent-[var(--color-sky)]"
+            aria-label="Избери всички на тази страница"
+          />
+          <span className="xl:hidden">Избери всички на страницата</span>
+          <span className="max-xl:hidden" />
+          <span className="max-xl:hidden">Продукт</span>
+          <span className="text-right max-xl:hidden">Цена €</span>
+          <span className="text-right max-xl:hidden" title="Цена преди намаление. Празно = без промоция.">
+            Стара цена €
+          </span>
+          <span className="text-right max-xl:hidden">Наличност</span>
+          <span className="text-center max-xl:hidden">В сайта</span>
+          <span className="max-xl:hidden" />
+        </div>
+        <ul className="divide-y divide-line">
+          {items.map((p) => (
+            <Row key={p.id} p={p} onDirty={onDirty} selected={selected.has(p.id)} onSelect={onSelect} />
+          ))}
+        </ul>
         {dirtyIds.size ? (
           <p className="border-t border-line bg-sun-soft px-4 py-2 text-sm font-bold">
             Имате незапазени промени в {dirtyIds.size} реда — натиснете „Запази“ на всеки ред.

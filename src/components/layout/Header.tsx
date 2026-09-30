@@ -35,8 +35,8 @@ export function Header() {
   return (
     <header className="sticky top-0 z-40 bg-white shadow-[0_1px_0_var(--color-line)]">
       <div className="hidden bg-ink text-[0.82rem] font-semibold text-white/90 md:block">
-        <div className="container-shop flex h-9 items-center justify-between gap-6">
-          <div className="flex items-center gap-6">
+        <div className="container-shop flex h-9 items-center justify-between gap-4 whitespace-nowrap lg:gap-6">
+          <div className="flex min-w-0 items-center gap-4 lg:gap-6">
             <span className="flex items-center gap-1.5">
               <Truck className="h-4 w-4 text-sun" /> Безплатна доставка над {formatPrice(s.shipping.freeOver)}
             </span>
@@ -48,10 +48,10 @@ export function Header() {
             </span>
           </div>
           <div className="flex items-center gap-5">
-            <Link href="/dostavka" className="hover:text-white">
+            <Link href="/dostavka" className="hidden hover:text-white lg:inline">
               Доставка и плащане
             </Link>
-            <Link href="/kontakti" className="hover:text-white">
+            <Link href="/kontakti" className="hidden hover:text-white lg:inline">
               Контакти
             </Link>
             <a href={`tel:${s.phone.replace(/\s/g, "")}`} className="flex items-center gap-1.5 text-white">
@@ -61,10 +61,10 @@ export function Header() {
         </div>
       </div>
 
-      <div className="container-shop flex h-[4.5rem] items-center gap-3 md:gap-6">
+      <div className="container-shop flex h-[4.5rem] items-center gap-3 md:gap-4 lg:gap-6">
         <MobileMenu categories={categories} menu={menu} gifts={gifts.enabled ? gifts : null} />
         <Logo name={s.name} />
-        <div className="hidden flex-1 md:block">
+        <div className="hidden min-w-0 flex-1 md:block">
           <Suspense fallback={<div className="h-12 rounded-full border-2 border-line bg-white" />}>
             <SearchBox />
           </Suspense>

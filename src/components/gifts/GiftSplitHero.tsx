@@ -8,27 +8,29 @@ import { ProductImage } from "@/components/product/ProductImage";
 
 export const SIDE_STYLE: Record<
   GiftSideKey,
-  { glow: string; panel: string; emblem: string; button: string; chip: string; icon: typeof Rocket; ring: string; accent: string }
+  { glow: string; panel: string; emblem: string; button: string; chip: string; icon: typeof Rocket; ring: string; accent: string; title: string }
 > = {
   boys: {
-    glow: "shadow-[0_0_45px_rgba(56,189,248,0.55)]",
-    panel: "border-sky-400/80 bg-sky-500/15",
-    emblem: "bg-gradient-to-br from-sky-300 via-sky-500 to-blue-700 ring-sky-200/70",
-    button: "bg-sky-500 text-white hover:bg-sky-400",
-    chip: "bg-sky-400/20 text-sky-100",
+    glow: "shadow-[0_10px_30px_rgba(2,132,199,0.18)]",
+    panel: "border-sky/30 bg-white",
+    emblem: "bg-gradient-to-br from-sky-300 via-sky-500 to-blue-600 ring-sky-soft",
+    button: "bg-sky text-white hover:bg-[#1b8bcb]",
+    chip: "bg-sky-soft text-[#0369a1]",
     icon: Rocket,
     ring: "ring-sky-300",
-    accent: "#38bdf8",
+    accent: "#2f9fe0",
+    title: "text-[#0369a1]",
   },
   girls: {
-    glow: "shadow-[0_0_45px_rgba(244,114,182,0.6)]",
-    panel: "border-pink-400/80 bg-pink-500/15",
-    emblem: "bg-gradient-to-br from-pink-300 via-pink-500 to-fuchsia-700 ring-pink-200/70",
-    button: "bg-pink-500 text-white hover:bg-pink-400",
-    chip: "bg-pink-400/20 text-pink-100",
+    glow: "shadow-[0_10px_30px_rgba(219,39,119,0.18)]",
+    panel: "border-pink-300/60 bg-white",
+    emblem: "bg-gradient-to-br from-pink-300 via-pink-500 to-fuchsia-600 ring-pink-100",
+    button: "bg-pink-500 text-white hover:bg-pink-600",
+    chip: "bg-pink-50 text-pink-700",
     icon: Crown,
     ring: "ring-pink-300",
-    accent: "#f472b6",
+    accent: "#ec4899",
+    title: "text-pink-700",
   },
 };
 
@@ -65,7 +67,7 @@ function SideCard({ side, active, compact }: { side: GiftSideSummary; active: Gi
       ) : null}
       <div
         className={clsx(
-          "relative w-full rounded-3xl border-2 backdrop-blur transition group-hover:brightness-110",
+          "relative w-full rounded-3xl border-2 transition group-hover:-translate-y-0.5",
           compact ? "mt-0 p-4" : "mt-6 p-5",
           st.panel,
           (selected || !active) && st.glow,
@@ -73,11 +75,11 @@ function SideCard({ side, active, compact }: { side: GiftSideSummary; active: Gi
       >
         <div className="flex items-center gap-4 text-left">
           <span className={clsx("grid shrink-0 place-items-center rounded-full ring-4", compact ? "h-12 w-12" : "h-16 w-16", st.emblem)}>
-            <Icon className={clsx("text-white drop-shadow", compact ? "h-6 w-6" : "h-8 w-8")} strokeWidth={2.4} />
+            <Icon className={clsx("text-white drop-shadow-sm", compact ? "h-6 w-6" : "h-8 w-8")} strokeWidth={2.4} />
           </span>
           <div className="min-w-0">
-            <div className={clsx("font-black uppercase tracking-wide text-white", compact ? "text-xl" : "text-2xl md:text-3xl")}>{side.title}</div>
-            {side.subtitle ? <div className="text-sm font-semibold text-white/75">{side.subtitle}</div> : null}
+            <div className={clsx("font-black uppercase tracking-wide", st.title, compact ? "text-xl" : "text-2xl md:text-3xl")}>{side.title}</div>
+            {side.subtitle ? <div className="text-sm font-semibold text-ink-soft">{side.subtitle}</div> : null}
           </div>
         </div>
         <div className="mt-4 flex items-center justify-between gap-3">
@@ -93,7 +95,7 @@ function SideCard({ side, active, compact }: { side: GiftSideSummary; active: Gi
   );
 }
 
-/** "Boys vs girls" split, in the style of a game's team-select screen. */
+/** "Boys vs girls" split: blue on the left, pink on the right, in the shop's light colours. */
 export function GiftSplitHero({
   boys,
   girls,
@@ -109,16 +111,19 @@ export function GiftSplitHero({
 }) {
   const H = headingLevel === 1 ? "h1" : "h2";
   return (
-    <section className={clsx("relative overflow-hidden rounded-[2rem] bg-[#0a0f2c] text-white", compact ? "px-4 py-6 md:px-8 md:py-8" : "px-5 py-10 md:px-10 md:py-14")}>
-      <div className="bg-stars pointer-events-none absolute inset-0 opacity-70" />
-      <div className="pointer-events-none absolute inset-y-0 left-0 w-3/5 bg-[radial-gradient(ellipse_at_28%_55%,rgba(56,189,248,0.5),transparent_62%)]" />
-      <div className="pointer-events-none absolute inset-y-0 right-0 w-3/5 bg-[radial-gradient(ellipse_at_72%_55%,rgba(236,72,153,0.5),transparent_62%)]" />
-      <div className="pointer-events-none absolute left-0 right-0 top-[48%] h-px bg-gradient-to-r from-transparent via-white/60 to-transparent" />
-      <div className="pointer-events-none absolute left-0 right-0 top-[48%] h-6 -translate-y-1/2 bg-gradient-to-r from-sky-400/0 via-white/15 to-pink-400/0 blur-md" />
+    <section
+      className={clsx("relative overflow-hidden rounded-[2rem] text-ink", compact ? "px-4 py-6 md:px-8 md:py-8" : "px-5 py-10 md:px-10 md:py-14")}
+      style={{ background: "linear-gradient(120deg, #e3f3fd 0%, #fff8ef 50%, #fde2ef 100%)" }}
+    >
+      <div className="pointer-events-none absolute -left-16 -top-20 h-64 w-64 rounded-full bg-sky/20 blur-3xl" />
+      <div className="pointer-events-none absolute -bottom-24 -right-10 h-72 w-72 rounded-full bg-pink-400/20 blur-3xl" />
+      <div className="pointer-events-none absolute left-1/2 top-4 h-40 w-40 -translate-x-1/2 rounded-full bg-sun/30 blur-3xl" />
 
       <div className="relative text-center">
-        <H className={clsx("text-gold font-black uppercase tracking-wide", compact ? "text-3xl md:text-4xl" : "text-4xl md:text-6xl")}>Идеи за подаръци</H>
-        {!compact ? <p className="mt-2 font-semibold text-white/75">Изберете за кого търсите подарък — подбрали сме най-обичаните играчки.</p> : null}
+        <H className={clsx("font-black tracking-tight", compact ? "text-3xl md:text-4xl" : "text-4xl md:text-6xl")}>
+          Идеи за <span className="bg-gradient-to-r from-sky via-grape to-pink-500 bg-clip-text text-transparent">подаръци</span>
+        </H>
+        {!compact ? <p className="mt-2 font-semibold text-ink-soft">Изберете за кого търсите подарък — подбрали сме най-обичаните играчки.</p> : null}
       </div>
 
       <div className={clsx("relative grid gap-6 md:grid-cols-2", compact ? "mt-5 md:gap-14" : "mt-8 md:gap-20")}>
@@ -126,13 +131,13 @@ export function GiftSplitHero({
         <SideCard side={girls} active={active} compact={compact} />
         <div
           className={clsx(
-            "pointer-events-none absolute left-1/2 z-20 hidden -translate-x-1/2 -translate-y-1/2 flex-col place-items-center rounded-full border-2 border-white/70 bg-[#0a0f2c] shadow-[0_0_40px_rgba(255,255,255,0.45)] md:grid",
+            "pointer-events-none absolute left-1/2 z-20 hidden -translate-x-1/2 -translate-y-1/2 flex-col place-items-center rounded-full border-4 border-white bg-sun-soft shadow-[var(--shadow-lift)] md:grid",
             compact ? "top-1/2 h-14 w-14" : "top-[62%] h-20 w-20",
           )}
           aria-hidden
         >
-          <Gift className={clsx("text-sun", compact ? "h-6 w-6" : "h-8 w-8")} />
-          {!compact ? <span className="-mt-3 text-[0.65rem] font-black tracking-widest text-white/80">ИЛИ</span> : null}
+          <Gift className={clsx("text-brand", compact ? "h-6 w-6" : "h-8 w-8")} />
+          {!compact ? <span className="-mt-3 text-[0.65rem] font-black tracking-widest text-ink-soft">ИЛИ</span> : null}
         </div>
       </div>
     </section>

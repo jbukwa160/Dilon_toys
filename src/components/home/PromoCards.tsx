@@ -8,7 +8,14 @@ import { ProductImage } from "@/components/product/ProductImage";
 export function PromoCards({ cards, autoImage = {} }: { cards: PromoCard[]; autoImage?: Record<string, string | null> }) {
   if (!cards.length) return null;
   return (
-    <div className={clsx("grid gap-4", cards.length === 1 ? "" : cards.length === 2 ? "md:grid-cols-2" : "md:grid-cols-3")}>
+    // Tablets: two per row (an odd last card takes the full row); desktop: all three in one row.
+    <div
+      className={clsx(
+        "grid gap-4",
+        cards.length === 2 && "sm:grid-cols-2",
+        cards.length >= 3 && "sm:grid-cols-2 lg:grid-cols-3 [&>*:last-child:nth-child(odd)]:sm:col-span-2 [&>*:last-child:nth-child(odd)]:lg:col-span-1",
+      )}
+    >
       {cards.map((c) => {
         const theme = THEMES[c.theme];
         const image = c.image || autoImage[c.id] || null;
@@ -18,7 +25,7 @@ export function PromoCards({ cards, autoImage = {} }: { cards: PromoCard[]; auto
               <span className="text-2xl font-black leading-tight">{c.title}</span>
               {c.text ? <span className={clsx("mt-1.5 text-sm font-semibold", theme.dark ? "text-white/85" : "text-ink/70")}>{c.text}</span> : null}
               {c.buttonLabel ? (
-                <span className={clsx("mt-4 inline-flex w-fit items-center gap-1.5 rounded-full px-4 py-2 text-sm font-extrabold", theme.dark ? "bg-white text-ink" : "bg-ink text-white")}>
+                <span className={clsx("mt-4 inline-flex w-fit items-center gap-1.5 whitespace-nowrap rounded-full px-4 py-2 text-sm font-extrabold", theme.dark ? "bg-white text-ink" : "bg-ink text-white")}>
                   {c.buttonLabel} <ArrowRight className="h-4 w-4 transition group-hover:translate-x-0.5" />
                 </span>
               ) : null}

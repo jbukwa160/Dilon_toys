@@ -45,12 +45,12 @@ export default async function AdminProductsPage({ searchParams }: { searchParams
         }
       />
 
-      <form className="mb-5 grid gap-3 rounded-3xl border border-line bg-white p-4 md:grid-cols-[1fr_auto_auto_auto_auto]" action="/admin/produkti">
-        <label className="flex items-center rounded-[0.875rem] border-2 border-line bg-white px-3 focus-within:border-sky">
+      <form className="mb-5 grid grid-cols-2 gap-3 rounded-3xl border border-line bg-white p-4 md:grid-cols-4 2xl:grid-cols-[minmax(14rem,1fr)_auto_auto_auto_auto]" action="/admin/produkti">
+        <label className="col-span-2 flex items-center rounded-[0.875rem] border-2 border-line bg-white px-3 focus-within:border-sky md:col-span-4 2xl:col-span-1">
           <Search className="h-5 w-5 text-muted" />
           <input name="q" defaultValue={q} placeholder="Име, код (SKU) или баркод — може и част от тях" className="w-full bg-transparent px-2 py-2.5 outline-none focus-visible:outline-none" aria-label="Търсене" />
         </label>
-        <select name="kat" defaultValue={category} className="field cursor-pointer md:w-56" aria-label="Категория">
+        <select name="kat" defaultValue={category} className="field col-span-2 min-w-0 cursor-pointer md:col-span-1 2xl:w-56" aria-label="Категория">
           <option value="">Всички категории</option>
           {categoryOptions().map((c) => (
             <optgroup key={c.slug} label={c.hidden ? `${c.name} (скрита)` : c.name}>
@@ -63,21 +63,21 @@ export default async function AdminProductsPage({ searchParams }: { searchParams
             </optgroup>
           ))}
         </select>
-        <select name="filter" defaultValue={filter} className="field cursor-pointer md:w-48" aria-label="Филтър">
+        <select name="filter" defaultValue={filter} className="field min-w-0 cursor-pointer 2xl:w-48" aria-label="Филтър">
           {Object.entries(ADMIN_FILTERS).map(([k, v]) => (
             <option key={k} value={k}>
               {v}
             </option>
           ))}
         </select>
-        <select name="sort" defaultValue={sort} className="field cursor-pointer md:w-40" aria-label="Подреждане">
+        <select name="sort" defaultValue={sort} className="field min-w-0 cursor-pointer 2xl:w-40" aria-label="Подреждане">
           {Object.entries(ADMIN_SORTS).map(([k, v]) => (
             <option key={k} value={k}>
               {v}
             </option>
           ))}
         </select>
-        <button type="submit" className="btn btn-primary h-12 px-6 !shadow-none">
+        <button type="submit" className="btn btn-primary col-span-2 h-12 px-6 !shadow-none md:col-span-1">
           Покажи
         </button>
       </form>
@@ -104,15 +104,15 @@ export default async function AdminProductsPage({ searchParams }: { searchParams
       )}
 
       {result.pageCount > 1 ? (
-        <nav className="mt-6 flex items-center justify-center gap-3" aria-label="Страници">
+        <nav className="mt-6 flex items-center justify-center gap-2 sm:gap-3" aria-label="Страници">
           <Link
             href={href(result.page - 1)}
             aria-disabled={result.page <= 1}
             className={`btn btn-ghost h-11 px-4 ${result.page <= 1 ? "pointer-events-none opacity-40" : ""}`}
           >
-            <ChevronLeft className="h-5 w-5" /> Предишна
+            <ChevronLeft className="h-5 w-5" /> <span className="max-sm:sr-only">Предишна</span>
           </Link>
-          <span className="font-bold text-ink-soft">
+          <span className="text-center font-bold text-ink-soft">
             Страница {result.page} от {formatNumber(result.pageCount)}
           </span>
           <Link
@@ -120,7 +120,7 @@ export default async function AdminProductsPage({ searchParams }: { searchParams
             aria-disabled={result.page >= result.pageCount}
             className={`btn btn-ghost h-11 px-4 ${result.page >= result.pageCount ? "pointer-events-none opacity-40" : ""}`}
           >
-            Следваща <ChevronRight className="h-5 w-5" />
+            <span className="max-sm:sr-only">Следваща</span> <ChevronRight className="h-5 w-5" />
           </Link>
         </nav>
       ) : null}

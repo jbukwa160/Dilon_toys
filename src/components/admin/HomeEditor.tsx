@@ -29,33 +29,59 @@ function ListControls({
   enabled: boolean;
   onToggle: () => void;
 }) {
-  const btn = "grid h-9 w-9 place-items-center rounded-lg border border-line bg-white hover:border-ink disabled:opacity-30";
+  const btn = "grid h-8 w-8 place-items-center rounded-lg border border-line bg-white hover:border-ink disabled:opacity-30";
   return (
-    <div className="flex flex-wrap items-center gap-1.5">
-      <button type="button" onClick={onToggle} className={clsx("btn h-9 px-3 text-sm", enabled ? "bg-mint-soft text-mint" : "bg-line text-muted")}>
-        {enabled ? <Eye className="h-4 w-4" /> : <EyeOff className="h-4 w-4" />} {enabled ? "Показва се" : "Скрит"}
-      </button>
-      <button type="button" className={btn} disabled={index === 0} onClick={() => onMove(-1)} title="Премести нагоре" aria-label="Премести нагоре">
-        <ArrowUp className="h-4 w-4" />
-      </button>
-      <button type="button" className={btn} disabled={index === count - 1} onClick={() => onMove(1)} title="Премести надолу" aria-label="Премести надолу">
-        <ArrowDown className="h-4 w-4" />
-      </button>
-      {onDuplicate ? (
-        <button type="button" className={btn} onClick={onDuplicate} title="Направи копие" aria-label="Направи копие">
-          <Copy className="h-4 w-4" />
-        </button>
-      ) : null}
+    <>
+      {/* Show / hide: small, next to the title. */}
       <button
         type="button"
-        className={clsx(btn, "text-brand hover:border-brand")}
-        onClick={() => confirm("Да изтрия ли този елемент?") && onRemove()}
-        title="Изтрий"
-        aria-label="Изтрий"
+        onClick={onToggle}
+        className={clsx("grid h-8 w-8 shrink-0 place-items-center rounded-lg border", enabled ? "border-mint/40 bg-mint-soft text-mint" : "border-ink bg-ink text-white")}
+        title={enabled ? "Показва се — натиснете, за да го скриете" : "Скрит — натиснете, за да се показва"}
+        aria-label={enabled ? "Скрий" : "Покажи"}
+        aria-pressed={!enabled}
       >
-        <Trash2 className="h-4 w-4" />
+        {enabled ? <Eye className="h-3.5 w-3.5" /> : <EyeOff className="h-3.5 w-3.5" />}
       </button>
-    </div>
+      {/* Order, copy, delete: under the title on phones, at the side on wider screens. */}
+      <div className="flex w-full justify-end gap-1 sm:w-auto">
+        <button type="button" className={btn} disabled={index === 0} onClick={() => onMove(-1)} title="Премести нагоре" aria-label="Премести нагоре">
+          <ArrowUp className="h-3.5 w-3.5" />
+        </button>
+        <button type="button" className={btn} disabled={index === count - 1} onClick={() => onMove(1)} title="Премести надолу" aria-label="Премести надолу">
+          <ArrowDown className="h-3.5 w-3.5" />
+        </button>
+        {onDuplicate ? (
+          <button type="button" className={btn} onClick={onDuplicate} title="Направи копие" aria-label="Направи копие">
+            <Copy className="h-3.5 w-3.5" />
+          </button>
+        ) : null}
+        <button
+          type="button"
+          className={clsx(btn, "text-brand hover:border-brand")}
+          onClick={() => confirm("Да изтрия ли този елемент?") && onRemove()}
+          title="Изтрий"
+          aria-label="Изтрий"
+        >
+          <Trash2 className="h-3.5 w-3.5" />
+        </button>
+      </div>
+    </>
+  );
+}
+
+/** Picture for a banner / promo card row: its own image, else what the site shows, else its colour. */
+function RowThumb({ src, background, wide, cover, dim }: { src: string | null; background: string; wide?: boolean; cover?: boolean; dim?: boolean }) {
+  return (
+    <span
+      className={clsx("block shrink-0 overflow-hidden rounded-lg border border-line", wide ? "h-12 w-20" : "h-12 w-12", dim && "opacity-50")}
+      style={{ background }}
+    >
+      {src ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img src={src} alt="" loading="lazy" referrerPolicy="no-referrer" className={clsx("h-full w-full", cover ? "object-cover" : "object-contain p-1")} />
+      ) : null}
+    </span>
   );
 }
 
@@ -295,20 +321,21 @@ export function HomeEditor({
         <div className="space-y-3">
           {home.slides.map((s, i) => (
             <div key={s.id} className={clsx("rounded-2xl border-2", openSlide === s.id ? "border-ink" : "border-line")}>
-              <div className="flex flex-wrap items-center gap-3 p-3">
-                <button type="button" onClick={() => setOpenSlide(openSlide === s.id ? null : s.id)} className="flex min-w-0 flex-1 items-center gap-3 text-left">
-                  <span className="grid h-12 w-20 shrink-0 place-items-center overflow-hidden rounded-lg" style={{ background: THEMES[s.theme].background }}>
-                    {s.image ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img src={s.image} alt="" className="h-full w-full object-cover" />
-                    ) : (
-                      <span className="text-xs font-black">{i + 1}</span>
-                    )}
-                  </span>
+              <div className="flex flex-wrap items-start gap-x-3 gap-y-2 p-3 sm:items-center">
+                <button type="button" onClick={() => setOpenSlide(openSlide === s.id ? null : s.id)} className="flex min-w-0 flex-1 items-start gap-3 text-left sm:items-center">
+                  <RowThumb
+                    src={s.image || s.mobileImage || collage[0]?.image || null}
+                    background={THEMES[s.theme].background}
+                    wide
+                    cover={!!(s.image || s.mobileImage)}
+                    dim={!s.enabled}
+                  />
                   <span className="min-w-0">
-                    <span className="block truncate font-black">{s.title || (s.layout === "image-only" ? "Готова картинка" : "Без заглавие")}</span>
+                    <span className="block break-words font-black leading-snug">
+                      {[s.title, s.highlight].filter(Boolean).join(" ") || (s.layout === "image-only" ? "Готова картинка" : "Без заглавие")}
+                    </span>
                     <span className="text-sm text-muted">
-                      Банер {i + 1} · {s.layout === "image-only" ? "Готова картинка" : "Текст + снимка"} · {openSlide === s.id ? "натиснете, за да затворите" : "натиснете, за да редактирате"}
+                      Банер {i + 1} · {s.enabled ? "показва се" : "скрит"} · {openSlide === s.id ? "натиснете, за да затворите" : "натиснете, за да редактирате"}
                     </span>
                   </span>
                 </button>
@@ -357,12 +384,14 @@ export function HomeEditor({
         <div className="space-y-3">
           {home.promos.map((c, i) => (
             <div key={c.id} className={clsx("rounded-2xl border-2", openPromo === c.id ? "border-ink" : "border-line")}>
-              <div className="flex flex-wrap items-center gap-3 p-3">
-                <button type="button" onClick={() => setOpenPromo(openPromo === c.id ? null : c.id)} className="flex min-w-0 flex-1 items-center gap-3 text-left">
-                  <span className="h-10 w-10 shrink-0 rounded-lg" style={{ background: THEMES[c.theme].background }} />
+              <div className="flex flex-wrap items-start gap-x-3 gap-y-2 p-3 sm:items-center">
+                <button type="button" onClick={() => setOpenPromo(openPromo === c.id ? null : c.id)} className="flex min-w-0 flex-1 items-start gap-3 text-left sm:items-center">
+                  <RowThumb src={c.image || promoAuto[c.id] || null} background={THEMES[c.theme].background} cover={!!c.image} dim={!c.enabled} />
                   <span className="min-w-0">
-                    <span className="block truncate font-black">{c.title || "Без заглавие"}</span>
-                    <span className="block truncate text-sm text-muted">{c.href || "без връзка"}</span>
+                    <span className="block break-words font-black leading-snug">{c.title || "Без заглавие"}</span>
+                    <span className="block break-all text-sm text-muted">
+                      {c.enabled ? "показва се" : "скрита"} · {c.href || "без връзка"}
+                    </span>
                   </span>
                 </button>
                 <ListControls
